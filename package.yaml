@@ -17,6 +17,14 @@ description:         Please see the README on GitHub at <https://github.com/0xd3
 
 dependencies:
 - base >= 4.7 && < 5
+- dependent-map
+- dependent-sum
+- ekg
+- ekg-core
+- exceptions
+- mtl
+- stm
+- text
 
 library:
   source-dirs: src
