@@ -120,17 +120,17 @@ class Typeable tracker => TrackerLike tracker where
 
 instance TrackerLike Counter where
   type TrackAction Counter m = m ()
-  track metric = getMetric metric >>= liftIO . TC.inc
+  track metric = getTracker metric >>= liftIO . TC.inc
   createTracker = createCounter
 
 instance TrackerLike Distribution where
   type TrackAction Distribution m = Double -> m ()
-  track metric val = getMetric metric >>= \distr -> liftIO $ TD.add distr val
+  track metric val = getTracker metric >>= \distr -> liftIO $ TD.add distr val
   createTracker = createDistribution
 
 instance TrackerLike Gauge where
   type TrackAction Gauge m = Int64 -> m ()
-  track metric val = getMetric metric >>= \gauge -> liftIO $ TG.set gauge val
+  track metric val = getTracker metric >>= \gauge -> liftIO $ TG.set gauge val
   createTracker = createGauge
 
 newtype DistrGauge = DistrGauge (Distribution, Gauge)
@@ -138,7 +138,7 @@ newtype DistrGauge = DistrGauge (Distribution, Gauge)
 instance TrackerLike DistrGauge where
   type TrackAction DistrGauge m = Int64 -> m ()
   track metric val = do
-    DistrGauge (distr, gauge) <- getMetric metric
+    DistrGauge (distr, gauge) <- getTracker metric
     liftIO $ do
       TG.add gauge val
       TD.add distr $ fromIntegral val
@@ -157,8 +157,8 @@ getMetricFromStore store metric = do
   takeMVar mvar
 
 class MonadIO m => MonadMetrics m where
-  getMetric :: (TrackerLike tracker, KnownSymbol name, Typeable metric, Ord (metric tracker name))
-            => metric tracker name -> m tracker
+  getTracker :: (TrackerLike tracker, KnownSymbol name, Typeable metric, Ord (metric tracker name))
+             => metric tracker name -> m tracker
 
 newtype MetricsT (m :: k -> *) (a :: k) = MetricsT { runMetricsT :: MetricsStore -> m a }
 type Metrics = MetricsT Identity
@@ -174,7 +174,7 @@ instance Monad m => Monad (MetricsT m) where
   (MetricsT val) >>= f = MetricsT $ \store -> val store >>= \a -> runMetricsT (f a) store
 
 instance MonadIO m => MonadMetrics (MetricsT m) where
-  getMetric metric = MetricsT $ \store -> liftIO $ getMetricFromStore store metric
+  getTracker metric = MetricsT $ \store -> liftIO $ getMetricFromStore store metric
 
 
 instance MonadTrans MetricsT where
