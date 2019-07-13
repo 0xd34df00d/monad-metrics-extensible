@@ -147,11 +147,11 @@ instance TrackerLike DistrGauge where
     g <- createGauge (name <> "_total") store
     pure $ DistrGauge (d, g)
 
-getMetricStore :: (TrackerLike tracker, KnownSymbol name, Typeable metric, Ord (metric tracker name))
-               => MetricsStore
-               -> metric tracker name
-               -> IO tracker
-getMetricStore store metric = do
+getMetricFromStore :: (TrackerLike tracker, KnownSymbol name, Typeable metric, Ord (metric tracker name))
+                   => MetricsStore
+                   -> metric tracker name
+                   -> IO tracker
+getMetricFromStore store metric = do
   mvar <- newEmptyMVar
   atomically $ writeTQueue (mReqQueue store) $ MetricRequest metric mvar
   takeMVar mvar
@@ -174,7 +174,7 @@ instance Monad m => Monad (MetricsT m) where
   (MetricsT val) >>= f = MetricsT $ \store -> val store >>= \a -> runMetricsT (f a) store
 
 instance MonadIO m => MonadMetrics (MetricsT m) where
-  getMetric metric = MetricsT $ \store -> liftIO $ getMetricStore store metric
+  getMetric metric = MetricsT $ \store -> liftIO $ getMetricFromStore store metric
 
 
 instance MonadTrans MetricsT where
