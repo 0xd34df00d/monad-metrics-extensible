@@ -1,0 +1,33 @@
+name:                monad-metrics-extensible
+version:             0.1.0.0
+github:              "0xd34df00d/monad-metrics-extensible"
+license:             BSD3
+author:              "Georg Rudoy"
+maintainer:          "0xd34df00d@gmail.com"
+copyright:           "2019 Georg Rudoy"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+synopsis:            An extensible and type-safe wrapper around EKG metrics
+category:            Web
+
+description:         Please see the README on GitHub at <https://github.com/0xd34df00d/monad-metrics-extensible#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+tests:
+  monad-metrics-extensible-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - monad-metrics-extensible
