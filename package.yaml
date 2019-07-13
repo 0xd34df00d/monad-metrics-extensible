@@ -26,6 +26,9 @@ dependencies:
 - stm
 - text
 
+ghc-options:
+- -Wall
+
 library:
   source-dirs: src
 
