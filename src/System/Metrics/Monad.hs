@@ -8,7 +8,6 @@ module System.Metrics.Monad
 ) where
 
 import Control.Monad.Catch
-import Control.Monad.Identity
 import Control.Monad.IO.Class
 import Control.Monad.Reader
 
@@ -16,7 +15,7 @@ import System.Metrics.Monad.Class
 import System.Metrics.Store
 
 newtype MetricsT (m :: k -> *) (a :: k) = MetricsT { runMetricsT :: MetricsStore -> m a }
-type Metrics = MetricsT Identity
+type Metrics = MetricsT IO
 
 instance Functor m => Functor (MetricsT m) where
   fmap f (MetricsT m) = MetricsT $ fmap f . m
