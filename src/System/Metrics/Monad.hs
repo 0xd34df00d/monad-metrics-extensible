@@ -43,6 +43,7 @@ import System.Metrics.Gauge as TG
 import Type.Reflection
 
 import Data.Dyn
+import System.Metrics.Monad.Class
 
 type DynOrd = Dyn Ord
 
@@ -113,11 +114,6 @@ withMetricsStore srv f = bracket
   snd
   (f . fst)
 
-class Typeable tracker => TrackerLike tracker where
-  type TrackAction tracker (m :: * -> *) = r | r -> m
-  track :: (MonadMetrics m, KnownSymbol name, Typeable metric, Ord (metric tracker name)) => metric tracker name -> TrackAction tracker m
-  createTracker :: T.Text -> Store -> IO tracker
-
 instance TrackerLike Counter where
   type TrackAction Counter m = m ()
   track metric = getTracker metric >>= liftIO . TC.inc
@@ -155,10 +151,6 @@ getMetricFromStore store metric = do
   mvar <- newEmptyMVar
   atomically $ writeTQueue (mReqQueue store) $ MetricRequest metric mvar
   takeMVar mvar
-
-class MonadIO m => MonadMetrics m where
-  getTracker :: (TrackerLike tracker, KnownSymbol name, Typeable metric, Ord (metric tracker name))
-             => metric tracker name -> m tracker
 
 newtype MetricsT (m :: k -> *) (a :: k) = MetricsT { runMetricsT :: MetricsStore -> m a }
 type Metrics = MetricsT Identity
