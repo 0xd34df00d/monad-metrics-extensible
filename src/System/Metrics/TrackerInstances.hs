@@ -4,12 +4,14 @@
 
 module System.Metrics.TrackerInstances where
 
+import qualified Data.Text as T
 import Control.Monad.IO.Class
 import GHC.Int
 import System.Metrics
 import System.Metrics.Counter as TC
 import System.Metrics.Distribution as TD
 import System.Metrics.Gauge as TG
+import System.Metrics.Label as TL
 
 import System.Metrics.Monad.Class
 
@@ -27,6 +29,11 @@ instance TrackerLike Gauge where
   type TrackAction Gauge m = Int64 -> m ()
   track metric val = getTracker metric >>= \gauge -> liftIO $ TG.set gauge val
   createTracker = createGauge
+
+instance TrackerLike Label where
+  type TrackAction Label m = T.Text -> m ()
+  track metric val = getTracker metric >>= \label -> liftIO $ TL.set label val
+  createTracker = createLabel
 
 newtype DistrGauge = DistrGauge (Distribution, Gauge)
 
