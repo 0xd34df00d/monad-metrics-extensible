@@ -32,9 +32,9 @@ Then we define a type that represents the possible metrics in our
 application:
 ```haskell
 data SomeMetrics ty name where
-  SomeCounter     :: TestMetrics Counter "some_counter"
-  AnotherCounter  :: TestMetrics Counter "other_counter"
-  SomeGauge       :: TestMetrics Gauge   "some_gauge"
+  SomeCounter     :: SomeMetrics Counter "some_counter"
+  AnotherCounter  :: SomeMetrics Counter "other_counter"
+  SomeGauge       :: SomeMetrics Gauge   "some_gauge"
 ```
 The string literals is what will be shown via ekg UI.
 
