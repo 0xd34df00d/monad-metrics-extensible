@@ -16,7 +16,7 @@ in three ways:
   (hence "extensible" one more time).
   You want a combined distribution + counter? No prob!
 
-`import System.Metrics.Extensible`{.haskell} is your entry point of choice!
+`import System.Metrics.Extensible` is your entry point of choice!
 
 ## A quick example
 
