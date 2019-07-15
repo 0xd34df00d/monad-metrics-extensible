@@ -14,6 +14,7 @@ import qualified Data.Text as T
 import Control.Concurrent
 import Control.Concurrent.STM.TQueue
 import Control.Monad.Catch
+import Control.Monad.IO.Class
 import Control.Monad.Identity
 import Control.Monad.STM
 import Data.GADT.Compare
@@ -62,11 +63,11 @@ data MetricRequest where
 
 newtype MetricsStore = MetricsStore { mReqQueue :: TQueue MetricRequest }
 
-newMetricsStore :: Server -> IO (MetricsStore, IO ())
-newMetricsStore srv = do
+newMetricsStore :: MonadIO m => Server -> m (MetricsStore, m ())
+newMetricsStore srv = liftIO $ do
   queue <- newTQueueIO
   threadId <- forkIO $ act queue $ MetricsState srv mempty
-  pure (MetricsStore queue, killThread threadId)
+  pure (MetricsStore queue, liftIO $ killThread threadId)
   where
     act queue state = do
       req <- atomically (readTQueue queue)
@@ -89,7 +90,7 @@ newMetricsStore srv = do
       putMVar mvar tracker
       pure state'
 
-withMetricsStore :: Server -> (MetricsStore -> IO a) -> IO a
+withMetricsStore :: (MonadIO m, MonadMask m) => Server -> (MetricsStore -> m a) -> m a
 withMetricsStore srv f = bracket
   (newMetricsStore srv)
   snd
