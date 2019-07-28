@@ -1,5 +1,10 @@
 # monad-metrics-extensible
 
+[![Build Status][travis-badge]][travis]
+[![Hackage][hackage-badge]][hackage]
+[![Stackage LTS][stackage-lts-badge]][stackage-lts]
+[![Stackage Nightly][stackage-nightly-badge]][stackage-nightly]
+
 ## tl;dr
 
 This library simplifies using [ekg](http://hackage.haskell.org/package/ekg)
@@ -70,3 +75,13 @@ main = do
   for instance, as can be seen in the example above,
   `Counter`s have no arguments, while `Gauge`s accept
   the corresponding new value.
+
+
+[travis]:        <https://travis-ci.org/0xd34df00d/monad-metrics-extensible>
+[travis-badge]:  <https://travis-ci.org/0xd34df00d/monad-metrics-extensible.svg?branch=master>
+[hackage]:       <https://hackage.haskell.org/package/monad-metrics-extensible>
+[hackage-badge]: <https://img.shields.io/hackage/v/monad-metrics-extensible.svg>
+[stackage-lts-badge]: <http://stackage.org/package/monad-metrics-extensible/badge/lts>
+[stackage-nightly-badge]: <http://stackage.org/package/monad-metrics-extensible/badge/nightly>
+[stackage-lts]: <http://stackage.org/lts/package/monad-metrics-extensible>
+[stackage-nightly]: <http://stackage.org/nightly/package/monad-metrics-extensible>
