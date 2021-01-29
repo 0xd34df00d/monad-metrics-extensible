@@ -18,8 +18,8 @@ deriving instance Eq (TestMetrics ty name)
 deriving instance Ord (TestMetrics ty name)
 
 data OtherMetrics ty name where
-  Baz  :: OtherMetrics Counter "foo1"
-  Quux :: OtherMetrics Gauge   "bar"
+  Baz  :: OtherMetrics Counter "other-foo1"
+  Quux :: OtherMetrics Gauge   "other-bar"
 
 deriving instance Eq (OtherMetrics ty name)
 deriving instance Ord (OtherMetrics ty name)
