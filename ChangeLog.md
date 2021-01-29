@@ -1,5 +1,9 @@
 # Changelog for monad-metrics-extensible
 
+## v. 0.1.1.0
+
+Add some utility types and functions: `Timestamp`, `Timer`, `timed`.
+
 ## v. 0.1.0.1
 
 A very brief documentation in README
