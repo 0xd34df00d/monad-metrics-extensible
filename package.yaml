@@ -25,6 +25,7 @@ dependencies:
 - mtl
 - stm
 - text
+- time
 
 ghc-options:
 - -Wall
