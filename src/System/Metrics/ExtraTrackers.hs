@@ -5,7 +5,7 @@ module System.Metrics.ExtraTrackers
 ( Timestamp
 
 , TimerMagnitude(..)
-, Timer
+, Timer(..)
 , timed
 ) where
 
@@ -34,6 +34,8 @@ instance TrackerLike Timestamp where
   createTracker name store = Timestamp <$> createLabel name store
 
 
+newtype Timer (magn :: TimerMagnitude) = Timer { getTimerDistribution :: Distribution }
+
 data TimerMagnitude = Msecs | Usecs | Nsecs deriving (Typeable)
 
 class MagnitudeOps (magn :: TimerMagnitude) where
@@ -51,8 +53,6 @@ instance MagnitudeOps 'Usecs where
 instance MagnitudeOps 'Nsecs where
   toString _ = "ns"
   secFraction _ = 1e-9
-
-newtype Timer (magn :: TimerMagnitude) = Timer Distribution
 
 instance (Typeable magn, MagnitudeOps magn) => TrackerLike (Timer magn) where
   type TrackAction (Timer magn) m = Double -> m ()
