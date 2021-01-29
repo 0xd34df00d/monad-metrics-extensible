@@ -1,6 +1,8 @@
 {-# LANGUAGE TypeFamilies #-}
 
-module System.Metrics.ExtraTrackers where
+module System.Metrics.ExtraTrackers
+( Timestamp
+) where
 
 import qualified Data.Text as T
 import Control.Monad.IO.Class
